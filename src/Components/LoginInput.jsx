@@ -10,6 +10,7 @@ class LoginInput extends Component {
 
   render() {
     const { username, avatar } = this.state;
+
     return (
       <>
         <form onSubmit={this.handleSubmit} className="formContainer">
@@ -21,15 +22,19 @@ class LoginInput extends Component {
             onChange={this.handleChange}
           ></input>
           <select
+            value={avatar}
             onChange={this.handleChange}
             name="avatar"
             className="avatarInput"
           >
-            <option selected disabled hidden></option>
+            <option selected disabled hidden>
+              Choose Avatar
+            </option>
             <option>triangle</option>
             <option>square</option>
             <option>circle</option>
           </select>
+          <button className="signup">Sign Up!</button>
         </form>
       </>
     );
@@ -42,7 +47,12 @@ class LoginInput extends Component {
     this.setState({ [name]: value });
   };
 
-  handleSubmit = () => {};
+  handleSubmit = e => {
+    e.preventDefault();
+    const { username, avatar } = this.state;
+    this.props.setUser(username, avatar);
+    this.setState({ username: null, avatar: null });
+  };
 }
 
 export default LoginInput;

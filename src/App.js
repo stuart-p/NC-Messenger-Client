@@ -9,7 +9,9 @@ class App extends React.Component {
     messageArray: [],
     inputText: "",
     socket: null,
-    username: "jessJelly"
+    username: null,
+    avatar: null,
+    loggedIn: false
   };
 
   componentDidMount = () => {
@@ -49,7 +51,8 @@ class App extends React.Component {
           <p>chat app...</p>
         </header>
         <section>
-          <LoginInput />
+          <LoginInput setUser={this.setUser} />
+
           {/* 
           <ul>
             {this.state.messageArray.map((message, iteratee) => {
@@ -68,6 +71,10 @@ class App extends React.Component {
       </div>
     );
   }
+
+  setUser = (newUsername, newAvatar) => {
+    this.setState({ username: newUsername, avatar: newAvatar, loggedIn: true });
+  };
 }
 
 export default App;
