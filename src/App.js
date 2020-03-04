@@ -1,6 +1,7 @@
 import React from "react";
 import "./App.css";
 import socketIOClient from "socket.io-client";
+import LoginInput from "./Components/LoginInput";
 
 class App extends React.Component {
   state = {
@@ -48,6 +49,8 @@ class App extends React.Component {
           <p>chat app...</p>
         </header>
         <section>
+          <LoginInput />
+          {/* 
           <ul>
             {this.state.messageArray.map((message, iteratee) => {
               return <li key={iteratee}>{message}</li>;
@@ -60,7 +63,7 @@ class App extends React.Component {
               onChange={this.handleChange}
             ></input>
             <button>send</button>
-          </form>
+          </form> */}
         </section>
       </div>
     );
