@@ -11,15 +11,15 @@ class App extends React.Component {
     socket: null,
     username: null,
     avatar: null,
-    loggedIn: false
+    loggedIn: false,
+    onlineUsers: null
   };
 
   componentDidMount = () => {
     const { endpoint } = this.state;
     const socket = socketIOClient(endpoint);
-
     this.setState({ socket: socket });
-    socket.emit("userConnected", this.state.username);
+
     socket.on("chat message", data => {
       this.setState(currentState => {
         const updatedArray = [...currentState.messageArray];
@@ -27,12 +27,17 @@ class App extends React.Component {
         return { messageArray: updatedArray };
       });
     });
+
     socket.on("connectionBroadcast", data => {
       this.setState(currentState => {
         const updatedArray = [...currentState.messageArray];
-        updatedArray.push(`${data} has joined the chat`);
+        updatedArray.push(data);
         return { messageArray: updatedArray };
       });
+    });
+
+    socket.on("onlineUserBroadcast", data => {
+      this.setState({ onlineUsers: data });
     });
   };
 
@@ -50,10 +55,13 @@ class App extends React.Component {
         <header>
           <p>chat app...</p>
         </header>
-        <section>
-          <LoginInput setUser={this.setUser} />
+        {this.state.loggedIn ? (
+          <p>Welcome, {this.state.username}!</p>
+        ) : (
+          <section>
+            <LoginInput setUser={this.setUser} />
 
-          {/* 
+            {/* {
           <ul>
             {this.state.messageArray.map((message, iteratee) => {
               return <li key={iteratee}>{message}</li>;
@@ -66,14 +74,22 @@ class App extends React.Component {
               onChange={this.handleChange}
             ></input>
             <button>send</button>
-          </form> */}
-        </section>
+          </form> } */}
+          </section>
+        )}
       </div>
     );
   }
 
   setUser = (newUsername, newAvatar) => {
     this.setState({ username: newUsername, avatar: newAvatar, loggedIn: true });
+    const { endpoint } = this.state;
+    const socket = socketIOClient(endpoint);
+    // if (this.state.loggedIn) {
+    //   console.log("here.......");
+
+    socket.emit("userConnected", newUsername);
+    // }
   };
 }
 
